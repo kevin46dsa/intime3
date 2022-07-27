@@ -4,7 +4,19 @@ const session = require('express-session');
 const configRoutes = require('./routes');
 const static = express.static(__dirname + "/public");
 const exphbs = require("express-handlebars");
-
+const cors = require("cors");
+const whitelist = ["http://localhost:3000"]; //Refrence: https://www.codingdeft.com/posts/nodejs-react-cors-error/
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (!origin || whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  credentials: true,
+};
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/public", static);
 app.use(express.urlencoded({extended: true}));
@@ -50,7 +62,7 @@ app.use('/private', (req, res, next) => { //add try catch
 
 configRoutes(app);
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT || 8080, () => {
   console.log("We've now got a server!");
   console.log('Your routes will be running on http://localhost:3000');
 });

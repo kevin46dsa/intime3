@@ -40,7 +40,7 @@ router.post('/createNewUser', async (req,res) =>{
 });
 
 router.post('/postintime', async (req,res) =>{
-
+        console.log(req.body)
     try{
         await data.postInTime();
         res.status(200).render('view/logout', {title: 'inTime'});
