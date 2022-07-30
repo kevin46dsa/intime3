@@ -1,10 +1,15 @@
-const express = require('express');
+const express = require("express");
 const app = express();
-const session = require('express-session');
-const configRoutes = require('./routes');
+var jwt = require("jsonwebtoken");
+const jwtkey = require("./config/authconfig");
 const static = express.static(__dirname + "/public");
-const exphbs = require("express-handlebars");
 const cors = require("cors");
+const configRoutes = require("./routes");
+let port = 8080;
+var xss = require("xss");
+const dataValidation = require("./data/dataValidation");
+
+
 const whitelist = ["http://localhost:3000"]; //Refrence: https://www.codingdeft.com/posts/nodejs-react-cors-error/
 const corsOptions = {
   origin: function (origin, callback) {
@@ -19,50 +24,86 @@ const corsOptions = {
 app.use(cors(corsOptions));
 app.use(express.json());
 app.use("/public", static);
-app.use(express.urlencoded({extended: true}));
+app.use(express.urlencoded({ extended: true }));
 
-app.engine("handlebars", exphbs.engine({ defaultLayout: "main" }));
-app.set("view engine", "handlebars");
+app.use("/users", (req, res, next) => {
+  res.header(
+    "Access-Control-Allow-Headers",
+    "x-access-token, Origin, Content-Type, Accept"
+  );
+  next();
+});
 
-app.use(
-  session({
-    name: 'AuthCookie',
-    secret: "some secret string!",
-    saveUninitialized: true,
-    resave: false
-    
-  })
-);
-
-// logging middle ware
-app.use(async(req,res,next)=>{
-    let currentTime = new Date().toUTCString();
-    let method = req.method;
-    let route = req.originalUrl;
-
-    let authenticated = undefined;
-    // check if user is authenticated or no ??
-    if (req.session.user) authenticated = true;
-    else authenticated = false; 
-
-    console.log(`Time: ${currentTime}, Method: ${method}, Route: ${route}, userAuth Status: ${authenticated}`) // add the check foruser authentication
-    next();
-} )
-
-
-app.use('/private', (req, res, next) => { //add try catch
-  
-  if (!req.session.user) {
-    return res.status(403).render('view/error', {title:"Error", restrictedAccess: true}); //create error view
-  } else {
-    next();
+// verify token
+app.use("/user/data", (req, res, next) => {
+  let token = undefined;
+  let tokeninbody = undefined;
+    if(req.headers)token = xss(req.headers["x-access-token"]);
+    if(req.body.header) tokeninbody = xss(req.body.headers["x-access-token"])
+  try{
+  if (token || tokeninbody) {
+  if (token) {
+    jwt.verify(token, jwtkey.secret, (err, decoded) => {
+      if (err) {
+       throw {
+          code: 401,
+          message:"Unauthorized!",
+        };
+      }
+      if (decoded) {
+        let email = decoded.email;
+        email = dataValidation.checkEmail(email);
+        req.userId = email;
+        console.log("Access Token Verified");
+        
+      }
+      next();
+    });
+  } else if (tokeninbody) {
+    jwt.verify(tokeninbody, jwtkey.secret, (err, decoded) => {
+      if (err) {
+        throw {
+           code: 401,
+           message:"Unauthorized!",
+         };
+       }
+      if (decoded) {
+        let email = decoded.email;
+        email = dataValidation.checkEmail(email);
+        req.userId = email;
+        console.log("Access Token Verified");
+        
+      }
+      next();
+    });
+  }
+}
+else throw {
+    code: 403,
+    message:
+      'AccessToken Not Provided',
+  };
+  }
+  catch(e){
+    return res.status(e.code).send({ Message:e.message});
   }
 });
 
+// logging middle ware
+app.use(async (req, res, next) => {
+  let currentTime = new Date().toUTCString();
+  let method = req.method;
+  let route = req.originalUrl;
+  if (req.userId) authenticated = true;
+  else authenticated = false;
+  console.log(
+    `Time: ${currentTime}, Method: ${method}, Route: ${route}, userAuth: ${authenticated}`
+  );
+  next();
+});
 
 configRoutes(app);
 
-app.listen(process.env.PORT || 8080, () => {
-  console.log("We've now got a server!");
-  console.log('Your routes will be running on http://localhost:3000');
+app.listen(port, () => {
+  console.log(`Your routes will be running on port http://localhost/${port}`);
 });

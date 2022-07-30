@@ -1,15 +1,17 @@
+const usersRoutes = require('./users');
+const publicRoutes = require('./public')
+const userAuth = require('./private')
 
-const userRoutes = require('./users');
-const privateRoutes = require('./private');
 
 const constructorMethod = (app) => {
-  app.use('/', userRoutes);
-  
-  app.use('/private', privateRoutes);
+	
+	app.use('/users', usersRoutes); // user data
+	app.use('auth', userAuth); // Login/Signup (API)Routes
+	app.use('/public', publicRoutes); // No Middle Ware route should display all public Data
 
-  app.use('*', (req, res) => {
-    res.sendStatus(404);
-  });
+	app.use('*', (req, res) => {
+		res.status(404).json({ error: 'Not Found' });
+	});
 };
 
 module.exports = constructorMethod;
