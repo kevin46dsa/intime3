@@ -6,11 +6,11 @@ const userAuth = require('./private')
 const constructorMethod = (app) => {
 	
 	app.use('/users', usersRoutes); // user data
-	app.use('auth', userAuth); // Login/Signup (API)Routes
+	app.use('/auth', userAuth); // Login/Signup (API)Routes
 	//app.use('/public', publicRoutes); // No Middle Ware route should display all public Data
 
-	app.use('*', (req, res) => {
-		res.status(404).json({ error: 'Not Found' });
+	app.use('/', (req, res) => {
+		res.status(200).json({ Home: "Welcome to inTime API Home Page" });
 	});
 };
 
