@@ -1,6 +1,6 @@
 {
     "mongoConfig":{
         "serverUrl": "mongodb+srv://kevin:0108@cluster0.vbqzm.mongodb.net/test",
-        "database": "Kevin_Dsa_lab10"
+        "database": "inTime"
     }
 }

@@ -23,8 +23,9 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 app.use(express.json());
-app.use("/public", static);
+//app.use("/public", static);
 app.use(express.urlencoded({ extended: true }));
+
 
 app.use("/users", (req, res, next) => {
   res.header(
@@ -88,6 +89,7 @@ else throw {
     return res.status(e.code).send({ Message:e.message});
   }
 });
+
 
 // logging middle ware
 app.use(async (req, res, next) => {

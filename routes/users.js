@@ -27,122 +27,23 @@ router.get('/generateReport', async (req,res) =>{
 
 });
 
-router.post('/createNewUser', async (req,res) =>{
-
-    try{
-        await data.createUser();
-        res.status(200).render('view/logout', {title: 'inTime'});
-        }
-        catch(e){
-            return res.status(500).render('view/error',{title:"Error",error:e})
-        }
-
-});
 
 router.post('/postintime', async (req,res) =>{
-        console.log(req.body)
+        
+        let isInTime = req.body.body
+        console.log(isInTime);
     try{
-        await data.postInTime();
-        res.status(200).render('view/logout', {title: 'inTime'});
+        let response = await data.postInTime(isInTime);
+        res.status(200).send({ data: response });
         }
         catch(e){
-            return res.status(500).render('view/error',{title:"Error",error:e})
-        }
-
-});
-
-router.post('/postouttime', async (req,res) =>{
-
-    try{
-        await data.postOutTime();
-        res.status(200).render('view/logout', {title: 'inTime'});
-        }
-        catch(e){
-            return res.status(500).render('view/error',{title:"Error",error:e})
+            res.status(404).send({ data: 'Something went Wrong' });
         }
 
 });
 
 
 
-router.get('/signup', async (req,res) => {
-    if (req.session.user) {
-        res.status(200).redirect("/private"); 
-    }
-    res.status(200).render('view/signup', {title: 'Sign up'});   
-
-     
-});
-
-router.post('/signup', async (req,res) =>{
-    try{
-    if(!req.body.username)throw 'Please enter Username';   
-    if(!req.body.password) throw "Please enter Password";
-    var username = req.body.username;
-    var password = req.body.password;
-    // datavalidation for both
-    username = dataVal.checkUsername(username); //check username returns 
-    dataVal.checkPassword(password); //check password doesnot return
-    }
-    catch(e){
-      return res.status(400).render('view/signup', {title: 'Sign up',Error: e});     
-    }
-    //if true
-    try{
-    var insertedBool = await data.createUser(username,password);
-    }
-    catch(e){
-        return res.status(400).render('view/signup', {title: 'Sign up',Error: e}); 
-    }
-    try{
-    if(insertedBool.userInserted === true){
-        res.status(200).redirect("/"); 
-    }
-    else res.status(500).render('view/error',{title:"Error",error:"Internal Server Error"})
-    }
-    catch(e){
-        return res.status(400).render('view/signup', {title: 'Sign up',Error: e}); 
-    }
-    
-})
-
-router.post('/login',async (req, res) => {
-    try{
-    if(!req.body.username)throw 'Please enter Username';   
-    if(!req.body.password) throw "Please enter Password";
-    var username = req.body.username;
-    var password = req.body.password;
-
-    // datavalidation for both
-    username = dataVal.checkUsername(username);
-    dataVal.checkPassword(password);
-    }
-    catch(e) {
-        return res.status(400).render('view/login', {title: 'Login',Error: e});
-    }
-    try{
-    var checkBool = await data.checkUser(username,password);
-    }
-    catch(e){
-        return res.status(400).render('view/login', {title: 'Login',Error: e});
-    }
-    // create cookie
-    if(checkBool.authenticated === true){
-    req.session.user = {'username': username};
-    res.status(200).redirect('/private');
-    }
- 
-
-});
-
-router.get('/logout', async (req, res) => {
-    if (req.session.user) {
-        req.session.destroy();
-    res.status(200).render('view/logout', {title: 'Come Back Soon'});
-    }
-    else res.status(400).render('view/error',{title:"Error",error:"User Not logged in Please Login"})
-      
-  });
 
 module.exports = router;
 
