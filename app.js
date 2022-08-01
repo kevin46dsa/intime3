@@ -5,7 +5,7 @@ const jwtkey = require("./config/authconfig");
 const static = express.static(__dirname + "/public");
 const cors = require("cors");
 const configRoutes = require("./routes");
-let port = 8080;
+let port = 8080 || process.env.PORT;
 var xss = require("xss");
 const dataValidation = require("./data/dataValidation");
 
