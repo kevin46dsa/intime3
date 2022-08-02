@@ -5,7 +5,6 @@ const jwtkey = require("./config/authconfig");
 const static = express.static(__dirname + "/public");
 const cors = require("cors");
 const configRoutes = require("./routes");
-let port = 8080 || process.env.PORT;
 var xss = require("xss");
 const dataValidation = require("./data/dataValidation");
 
@@ -106,6 +105,6 @@ app.use(async (req, res, next) => {
 
 configRoutes(app);
 
-app.listen(port, () => {
-  console.log(`Your routes will be running on port http://localhost/${port}`);
+app.listen(process.env.PORT || 8080, () => {
+  console.log(`Your routes will be running on port http://localhost/8080 `);
 });
