@@ -9,7 +9,7 @@ var xss = require("xss");
 const dataValidation = require("./data/dataValidation");
 
 
-const whitelist = ["http://localhost:3000"]; //Refrence: https://www.codingdeft.com/posts/nodejs-react-cors-error/
+const whitelist = ["https://intimeworkplace.herokuapp.com/"]; //Refrence: https://www.codingdeft.com/posts/nodejs-react-cors-error/
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || whitelist.indexOf(origin) !== -1) {
