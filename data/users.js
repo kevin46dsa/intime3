@@ -9,11 +9,13 @@ var moment = require('moment');
 module.exports = {
     
     async postInTime(isInTime){
-        let date = moment().format('L'); 
+        const tz = moment.tz.guess();
+        //let date = moment().format('L'); 
         let time = moment().format('LT');
         //let type =  'in';
         let Data = {
-            Date: date,
+           // Date: date,
+            Date: tz,
             Time: time,
            // Type: type
         };

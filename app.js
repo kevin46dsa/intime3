@@ -2,13 +2,13 @@ const express = require("express");
 const app = express();
 var jwt = require("jsonwebtoken");
 const jwtkey = require("./config/authconfig");
-const static = express.static(__dirname + "/public");
+//const static = express.static(__dirname + "/public");
 const cors = require("cors");
 const configRoutes = require("./routes");
 var xss = require("xss");
 const dataValidation = require("./data/dataValidation");
 
-
+//const whitelist = ["http://localhost/8080"];
 const whitelist = ["https://intimeworkplace.herokuapp.com"]; //Refrence: https://www.codingdeft.com/posts/nodejs-react-cors-error/
 const corsOptions = {
   origin: function (origin, callback) {
