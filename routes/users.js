@@ -31,9 +31,11 @@ router.get('/generateReport', async (req,res) =>{
 router.post('/postintime', async (req,res) =>{
         
         let isInTime = req.body.body
+        let date = req.body.Date
+        let time = req.body.Time
         console.log(isInTime);
     try{
-        let response = await data.postInTime(isInTime);
+        let response = await data.postInTime(isInTime,date,time);
         res.status(200).send({ data: response });
         }
         catch(e){
