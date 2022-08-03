@@ -34,6 +34,7 @@ router.post('/postintime', async (req,res) =>{
         let date = req.body.Date
         let time = req.body.Time
         console.log(isInTime,date,time);
+        console.log(req.body);
     try{
         let response = await data.postInTime(isInTime,date,time);
         res.status(200).send({ data: response });
