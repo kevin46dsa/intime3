@@ -8,8 +8,8 @@ const configRoutes = require("./routes");
 var xss = require("xss");
 const dataValidation = require("./data/dataValidation");
 
-//const whitelist = ["http://localhost/8080"];
-const whitelist = ["https://intimeworkplace.herokuapp.com"]; //Refrence: https://www.codingdeft.com/posts/nodejs-react-cors-error/
+const whitelist = ["http://localhost:3000"];
+//const whitelist = ["https://intimeworkplace.herokuapp.com"]; //Refrence: https://www.codingdeft.com/posts/nodejs-react-cors-error/
 const corsOptions = {
   origin: function (origin, callback) {
     if (!origin || whitelist.indexOf(origin) !== -1) {

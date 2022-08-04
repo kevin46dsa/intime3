@@ -1,6 +1,6 @@
 const usersRoutes = require('./users');
 //const publicRoutes = require('./public')
-const userAuth = require('./private')
+const userAuth = require('./auth')
 
 
 const constructorMethod = (app) => {

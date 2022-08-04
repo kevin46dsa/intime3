@@ -9,12 +9,11 @@ var moment = require('moment');
 module.exports = {
     
     async postInTime(isInTime,date,time){
-        //const tz = moment.tz.guess();
+       
         //let date = moment().format('L'); 
         //let time = moment().format('LT');
         //let type =  'in';
         let Data = {
-           // Date: date,
             Date: date,
             Time: time,
            // Type: type
@@ -45,8 +44,24 @@ module.exports = {
 
         
     },
-   
 
+    async getifUserInOrOut(){
+        return {isINOrOut: "OUT"};
+    },
+
+    //will have to add email to verify user
+    async getUserTime(){
+        const userCollection = await allUsers();
+        const userFound = await userCollection.findOne({ Email: "" });
+
+        if (userFound) {
+            return {data: userFound.Time};
+        }
+        else throw 'User Not Found';
+
+    },
+   
+     //will have to add email to verify user
     async getTotalHours(){
     const startTime = moment("12:26:59 am", "HH:mm:ss a");
     const endTime = moment("06:12:07 pm", "HH:mm:ss a");

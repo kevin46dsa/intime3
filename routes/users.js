@@ -30,9 +30,9 @@ router.get('/generateReport', async (req,res) =>{
 
 router.post('/postintime', async (req,res) =>{
         
-        let isInTime = req.body.body
-        let date = req.body.Date
-        let time = req.body.Time
+        let isInTime = req.body.Value
+        let date = req.body.date
+        let time = req.body.time
         console.log(isInTime,date,time);
         console.log(req.body);
     try{
@@ -43,6 +43,20 @@ router.post('/postintime', async (req,res) =>{
             console.log(e);
             res.status(404).send({ data: 'Something went Wrong' });
         }
+
+});
+
+router.get('/getIsUserInOrOut', async (req,res) =>{
+    
+    let response = await data.getifUserInOrOut();
+    res.status(200).send({ data: response });
+
+});
+
+router.get('/specificUserData', async (req,res) =>{
+    
+    let response = await data.getUserTime();
+    res.status(200).send({ data: response });
 
 });
 
